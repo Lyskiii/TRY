@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}My Django App{% endblock %}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+  <style>
+
+  </style>{% block styles %}{% endblock %}
+</head>
+<body>
+
+  <div class="container">
+    <h1>Ticket d'autorisation</h1>
+<h2>Num: 111/006/{{current_date}}</h2>
+<p>A: Departement Administration du Credit</p>
+<p>Agence : Housing bank {{agence.adresse}} .indice d'agence : {{agence.numagence}}</p>
+<p>DE: Direction de Credit:</p>
+<p>Niveau de decision</p>
+<table class="table">
+    <tr>
+        <td>CIF</td>
+        <td>{{client.cif}}</td>
+    </tr>
+    <tr>
+        <td>Client</td>
+        {% if client.typeclient == 'R' %}
+        <td>{{client.nom}} {{client.prenom}}</td>
+        {% else %}
+        <td>{{client.raisonsociale</td>
+        {% endif %}
+    </tr>
+    <tr><td>Activite</td>
+    <td>{{client.secteuractivite}}</td></tr>
+    <tr><td>Adresse</td>
+    <td>{{client.adresse}}</td></tr>
+    <tr><td>Compte</td>
+    <td>{{ticket.compte.numcompte}}</td></tr>
+</table>
+<p>Nous vous informons qu'une autorisation de credit a ete mise en place par l'autorite citee plus haut, sous reserve, de
+reunir au prealable les garanties et conditions ci-dessous :</p>
+<table class="table">
+    <tr>
+        <th>Nature du Credit</th>
+        <th>Montant (DZD)</th>
+        <th>Echeance</th>
+        <th>Taux d'interets</th>
+    </tr>
+    <tr>
+        <td>{{ticket.typecred}}</td>
+        <td>{{ticket.montant}}</td>
+        <td>{{ticket.dateecheance|date:"d/m/Y"}}</td>
+        <td>{{ticket.txinteret}}</td>
+
+    </tr>
+</table>
+<p>Montant en lettres: {{ montant }} DINARS ALGERIENS</p>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNS3tx" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container-fluid pt-4">
+    <div class="row">
+    <div class="col-md-2 ml-n3">
+      <form method="get">
+          {% csrf_token %}
+
+            <div class="row-md-3">
+              <label for="cif" class="form-label">CIF</label>
+              <input type="text" class="form-control" name="cif" value="{{ query_params.cif }}">
+            </div>
+          <div class="row-md-3">
+              <label for="nom" class="form-label">Nom Client</label>
+              <input type="text" class="form-control" name="nom" value="{{ query_params.nom }}">
+            </div>
+            <div class="row-md-3">
+              <label for="prenom" class="form-label">Prenom Client</label>
+              <input type="text" class="form-control" name="prenom" value="{{ query_params.prenom }}">
+            </div>
+
+          <div class="row-md-2">
+          <button type="submit" class="btn btn-primary mt-2 ">Search</button></div>
+        </form>
+
+    </div>
+    <div class="col-md-10">
+<div class="card card-body">{% if request.user.employe.role == 'CA' %}
+    <a class="btn btn-primary btn-block" href="{% url 'createclient' %}">Creer nouveau client</a>{% endif %}
+<div class="table-responsive">
+  <table class="table">
+
+      <tr>
+          <th>CIF</th>
+          <th>Nom</th>
+          <th>Prenom</th>
+           {% if request.user.employe.role == 'CA' %}
+          <th>Demandes</th>
+{% endif %}
+      </tr>
+     {% if clients %}
+      {% for c in clients %}
+      <tr>
+          <td><a href="{% url 'client' c.cif %}">{{c.cif}}</a></td>
+          <td>{{c.nom}}</td>
+          <td>{{c.prenom}}</td>
+          {% if request.user.employe.role == 'CA' %}
+          <td><a class="btn btn-info" href="{% url 'createdemande' c.cif %}">Créer Demande</a></td>
+          {% endif %}
+
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr>Aucun Client</tr>
+      {% endif %}
+  </table>
+    </div></div>
+</div>
+    </div>
+    </div>
+{% endblock %}

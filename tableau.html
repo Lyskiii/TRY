@@ -1,0 +1,96 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container-fluid pt-4">
+      <h1>Tableau d'amortissement</h1>
+      <p>Type de crédit : {{ credit.typecred }}</p>
+      <p>Montant emprunté : {{ credit.montant }} Dinars Algeriens</p>
+      <p>Taux d'intérêt annuel : {{ credit.txinteret }}%</p>
+      <p>Durée de l'emprunt : {{ credit.dureeemprunt }} mois</p>
+
+
+    <div class="col-md-10">
+<div class="card card-body">
+    <a class="btn btn-primary btn-block"  onclick="window.print();" >imprimer</a>
+<div class="table-responsive">
+  <table class="table">
+
+    <th>Mois</th>
+    <th>Amortissement</th>
+    <th>Intérêts</th>
+    <th>TVA</th>
+    <th>Echeance</th>
+    <th>Capital restant dû</th>
+  </tr>
+</thead>
+<tbody>
+  {% for index, row in df.iterrows %}
+  <tr>
+    <td>{{ index }}</td>
+     <td>{{ row.Amortissement }}</td>
+    <td>{{ row.Intérêts }}</td>
+    <td>{{ row.TVA }}</td>
+    <td>{{ row.Echeance }}</td>
+    <td>{{ row.Capital }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+    </div></div>
+</div>
+    </div>
+    </div>
+ </div>
+{% endblock %}
+
+
+
+
+{% block scripts %}
+   <script>
+
+
+      // Récupération du bouton d'ouverture
+const openBtn = document.getElementById('new-btn');
+
+// Fonction pour ouvrir le tableau dans un nouvel onglet
+function openTableInNewTab() {
+  // Récupération du tableau
+  const table = document.querySelector("table");
+
+  // Création d'une nouvelle fenêtre
+  const newWindow = window.open();
+
+  // Injection du HTML de la table dans la nouvelle fenêtre
+  const html = `
+    <html>
+      <head>
+        <title>Tableau</title>
+        <style>
+          table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 50%;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+          }
+        </style>
+      </head>
+      <body>
+        <table>
+          ${table.innerHTML}
+        </table>
+      </body>
+    </html>
+  `;
+  newWindow.document.write(html);
+}
+
+// Ajout de l'événement de clic au bouton d'ouverture
+openBtn.addEventListener('click', openTableInNewTab);
+
+</script>
+{% endblock %}

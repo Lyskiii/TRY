@@ -1,0 +1,176 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container-fluid pt-4 pb-4">
+    <div class="row">
+    <div class="col-md-4 ml-n5 mr-5">
+    <div class="card card-body">
+        <h5>Informations du Client:</h5>
+      <table class="table">
+          <tr>
+              <td>CIF</td>
+              <td>{{client.cif}}</td>
+          </tr>
+          <tr>
+              <td>Type Client: </td>
+              <td>{{client.get_typeclient_display}}</td>
+          </tr>
+          <tr>
+              {% if client.typeclient == 'R' %}
+              <td>Nom et Prénom </td>
+              <td>{{client.nom}} {{client.prenom}}</td>
+          </tr>
+          <tr>
+              <td>Date et lieu de Naissance </td>
+              <td>{{client.datenaissance}} {{client.lieunaissaince}}</td>
+          </tr>
+          <tr>
+              <td>Numéro d'identification Nationale</td>
+              <td>{{client.nin}}</td>
+          </tr>{% else %}
+          <tr>
+              <td>Raison Sociale </td>
+              <td>{{client.raisonsociale}}</td>
+          </tr>
+          <tr>
+              <td>Date et lieu de Création </td>
+              <td>{{client.datenaissance}} {{client.lieunaissance}}</td>
+          </tr>
+          <tr>
+              <td>Nom et Prénom du Gérant</td>
+              <td>{{client.nomgerant}} {{client.prenomgerant}}</td>
+          </tr>
+          <tr>{% endif %}
+              <td>Numéro d'identification Fiscale</td>
+              <td>{{client.nif}}</td>
+          </tr>
+          <tr>
+              <td>Registre de Commerce </td>
+              <td>{{client.regcomm}}</td>
+          </tr>
+          <tr>
+              <td>Secteur d'Activité</td>
+              <td>{{client.secteuractivite}}</td>
+          </tr>
+          <tr>
+              <td>Adresse </td>
+              <td>{{client.adresse}}</td>
+          </tr>
+          <tr>
+              <td>E-mail </td>
+              <td>{{client.email}}</td>
+          </tr>
+          <tr>
+              <td>Téléphone </td>
+              <td>{{client.tel}}</td>
+          </tr>
+      </table>
+    </div>
+    </div>
+    <div class="col-md-8">
+        <select id="type"   onchange="showFields()">
+
+  <option value="D">Demandes</option>
+  <option value="C">Comptes</option>
+</select>
+<div id="divdemandes" class="card card-body" >
+    {% if client.typeclient == 'R' %}
+    <a class="btn btn-primary btn-block" href="{% url 'createdemande' client.cif %}">Creer nouvelle Demande pour le client '{{client.nom}}
+     {{client.prenom}}'</a>
+    {% else %}
+    <a class="btn btn-primary btn-block" href="{% url 'createdemande' client.cif %}">Creer nouvelle Demande pour le client '{{client.raisonsociale}}
+        '</a>
+    {% endif %}
+<div class="table-responsive">
+  <table class="table">
+
+      <tr>
+          <th>Demande</th>
+          <th>Agence</th>
+          <th>Faite le</th>
+          <th>Traité par</th>
+
+      </tr>
+     {% if demandes %}
+      {% for d in demandes %}
+      <tr>
+          <td>{{d.iddc}}</td>
+          <td>{{d.creepar.agence.adresse}}</td>
+          <td >{{d.datedem|date:"d/m/Y H:i"}}</td>
+          <td>{{d.traitepar.get_role_display}}</td>
+
+
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr>Aucune Demande</tr>
+      {% endif %}
+  </table>
+    </div></div>
+    <div id="divcomptes" class="card card-body" style="display:none;">
+    <a class="btn btn-primary btn-block" href="{% url 'createcompte' client.cif %}">Creer nouveau compte pour le client '{{client.nom}}
+     {{client.prenom}}'</a>
+<div class="table-responsive">
+  <table class="table">
+
+      <tr>
+          <th>N° de Compte</th>
+          <th>Agence</th>
+          <th>Devise</th>
+          <th>Solde</th>
+          <th>Date d'Ouverture</th>
+          <th>Cloture</th>
+          <th>Date Cloture</th>
+
+
+      </tr>
+     {% if comptes %}
+      {% for c in comptes %}
+      <tr>
+          <td>{{c.numcompte}}</td>
+          <td>{{c.creepar.agence.adresse}}</td>
+          <td>{{c.devise}}</td>
+          <td>{{c.solde}}</td>
+          <td >{{c.dateouv|date:"d/m/Y "}}</td>
+          {% if c.cloture %}
+          <td>OUI</td>
+          <td>{{c.datecloture|date:"d/m/Y "}}</td>
+          {% else %}
+          <td>NON</td>
+          <td>-</td>
+          {% endif %}
+
+
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr>Aucun Compte</tr>
+      {% endif %}
+  </table>
+    </div>
+
+
+</div>
+</div>
+    </div>
+    </div>
+{% endblock %}
+
+
+    {% block scripts %}
+  <script>
+function showFields() {
+  var type=document.getElementById("type");
+  var dem = document.getElementById("divdemandes");
+  var com = document.getElementById("divcomptes");
+
+  if (type.value == "D") {
+    dem.style.display='block'
+    com.style.display='none'
+
+  } else if (type.value == "C") {
+    dem.style.display='none'
+    com.style.display='block'
+  }
+}
+  </script>
+{% endblock %}

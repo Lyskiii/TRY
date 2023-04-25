@@ -1,0 +1,94 @@
+{% extends 'main.html' %}
+{% block styles %}
+
+
+{% endblock %}
+{% block content %}
+
+<div class="container-fluid pt-4">
+  <div class="row">
+    <div class="col-md-2 ml-n3">
+      <form method="get">
+          {% csrf_token %}
+
+            <div class="row-md-3">
+              <label for="iddc" class="form-label">IDDC</label>
+              <input type="text" class="form-control" name="iddc" value="{{ query_params.iddc }}">
+            </div>
+            <div class="row-md-3">
+              <label for="datedem" class="form-label">Date de demande</label>
+              <input type="date" class="form-control" name="datedem" id="datedem" value="{{ query_params.datedem }}">
+            </div>
+            <div class="row-md-3">
+              <label for="typedem" class="form-label">Type de demande</label>
+              <input type="text" class="form-control" name="typedem" value="{{ query_params.typedem }}">
+            </div>
+            <div class="row-md-3">
+              <label for="client" class="form-label">CIF</label>
+              <input type="text" class="form-control" name="client" value="{{ query_params.cif }}">
+            </div>
+            <div class="row-md-3">
+              <label for="traitepar" class="form-label">Traité par</label>
+              <input type="text" class="form-control" name="traitepar" value="{{ query_params.traitepar }}">
+            </div>
+          <div class="row-md-2">
+          <button type="submit" class="btn btn-primary mt-2 ">Search</button></div>
+        </form>
+
+    </div>
+    <div class="col-md-10">
+      <div class=" card card-body ">
+         {% if request.user.employe.role == 'CA' %}
+          <a class="btn btn-primary btn-block" href="{% url 'createdemande2' %}">Creer nouvelle demande</a>
+        {% endif %}
+      <div class="table-responsive">
+
+      <table class="table table-lg">
+        <thead>
+          <tr>
+            <th>Demande N°</th>
+            <th>CIF</th>
+            <th>Agence</th>
+            <th >Date</th>
+
+            <th >Traitée par</th>
+              <th >Envoyé le</th>
+              <th >Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% if demandes %}
+          {% for d in demandes %}
+          <tr>
+            <td><a class="btn-link" href="{% url 'detaildemande' d.iddc %}">{{d.iddc}}</a></td>
+            <td >{{d.client.cif}}</td>
+              <td >{{d.creepar.agence.adresse}}</td>
+            <td >{{d.datedem|date:"d/m/Y H:i"}}</td>
+
+              <td >{{d.traitepar.get_role_display}}</td>
+            <td>{{d.dateenvoie|date:"d/m/Y H:i"}}</td>
+           <td>{{d.get_statut_display}}</td>
+          </tr>
+          {% endfor %}
+
+        {% endif %}
+          <!-- more rows here -->
+
+        </tbody>
+      </table>
+      </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+
+  <!-- Include Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

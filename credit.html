@@ -1,0 +1,83 @@
+{% extends 'main.html' %}
+{% block styles %}
+<style>
+.my-custom-scrollbar {
+position: relative;
+height: 400px;
+overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
+.table-header {
+  position: sticky;
+  top: 0;
+   opacity:1;
+  z-index: 1;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid pt-4">
+    <div class="row">
+    <div class="col-md-2 ml-n3">
+      <form method="get">
+          {% csrf_token %}
+
+            <div class="row-md-3">
+              <label for="montant" class="form-label">montant</label>
+              <input type="text" class="form-control" name="montant" value="{{ query_params.montant }}">
+            </div>
+          <div class="row-md-3">
+              <label for="typecred" class="form-label">Type crédit</label>
+              <input type="text" class="form-control" name="typecred" value="{{ query_params.typecred }}">
+            </div>
+            <div class="row-md-3">
+              <label for="pk" class="form-label">pk</label>
+              <input type="text" class="form-control" name="pk" value="{{ query_params.pk }}">
+            </div>
+
+          <div class="row-md-2">
+          <button type="submit" class="btn btn-primary mt-2 ">Search</button></div>
+        </form>
+
+    </div>
+    <div class="col-md-10">
+<div class="card card-body">
+    {% if request.user.employe.role == 'CA' %}
+    <a class="btn btn-primary btn-block" href="{% url 'addcred'  %}">Creer nouveau crédit</a>{% endif %}
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+  <table  class="table table-bordered table-striped mb-0">
+
+      <tr class="table-header">
+          <th>pk</th>
+          <th>type crédit</th>
+          <th>Montant</th>
+          <th>date echeance</th>
+          <th>taux</th>
+
+              <th>Tableau d'amortissement</th>
+
+      </tr>
+      {% for credit in credits %}
+      <tr>
+          <td>{{ credit.pk }}</td>
+        <td>{{ credit.typecred }}</td>
+        <td>{{ credit.montant }}</td>
+        <td>{{ credit.dateecheance }}</td>
+        <td>{{ credit.txinteret }}</td>
+        <td>
+          <a href="{% url 'amortization_table' credit.pk %}">afficher le tableau d'amortissement</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">Il n'y a aucun crédit à afficher.</td>
+      </tr>
+  </table>
+    </div></div>
+</div>
+    </div>
+    </div>
+{% endfor%}
+{% endblock %}

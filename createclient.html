@@ -1,0 +1,141 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="card card-body mt-4">
+  <div style="text-align:center;">
+  <h1>Create a new client</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <label for="typeclient">Type Client</label>
+    <select name="typeclient" id="typeclient" onchange="showFields()" required>
+      <option value="">Select an option</option>
+      <option value="R">Retail</option>
+      <option value="C">Corporate</option>
+    </select>
+
+    <br><br>
+
+    <div id="nom" style="display:none;">
+      <label for="nom">Nom:</label>
+      <input type="text" name="nom">
+    </div>
+
+    <div id="prenom" style="display:none;">
+      <label for="prenom" >Prenom:</label>
+      <input type="text" name="field3" required>
+    </div>
+
+    <div id="raisonsociale" style="display:none;">
+      <label for="raisonsociale">Raison Sociale:</label>
+      <input type="text" name="field4" required>
+    </div>
+
+    <div id="nomgerant" style="display:none;">
+      <label for="nomgerant">Nom Gérant:</label>
+      <input type="text" name="nomgerant" required>
+    </div>
+
+    <div id="prenomgerant" style="display:none;">
+      <label for="prenomgerant">Nom Gérant:</label>
+      <input type="text" name="prenomgerant" required>
+    </div>
+
+    <div id="datenaissance">
+      <label for="datenaissance">Date de Naissance/Création:</label>
+      <input type="date" name="datenaissance" required>
+    </div>
+
+    <div id="lieunaissance">
+      <label for="lieunaissance">Lieu Naissance/Création:</label>
+      <input type="text" name="lieunaissance" required>
+    </div>
+
+    <div id="nin" style="display:none;">
+      <label for="nin">Numéro d'identification Nationale:</label>
+      <input type="text" name="nin" required>
+    </div>
+
+    <div id="nif">
+      <label for="nif">Numéro d'identification fiscale:</label>
+      <input type="text" name="nif" required>
+    </div>
+
+    <div id="reg">
+      <label for="reg">Registre de Commerce:</label>
+      <input type="text" name="reg" required>
+    </div>
+
+    <div id="sec">
+      <label for="sec">Secteur d'Activité:</label>
+      <input type="text" name="sec" required>
+    </div>
+
+    <div id="adresse">
+      <label for="adresse">Adresse:</label>
+      <input type="text" name="adresse" required>
+    </div>
+
+    <div id="email">
+      <label for="email">E-mail:</label>
+      <input type="email" name="email">
+    </div>
+
+    <div id="tel">
+      <label for="tel">Téléphone:</label>
+      <input type="text" name="tel">
+    </div>
+
+    <br><br>
+
+    <input type="submit" value="Submit">
+  </form>
+</div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+  <script>
+function showFields() {
+  var type = document.getElementById("typeclient");
+  var nom = document.getElementById("nom");
+  var prenom = document.getElementById("prenom");
+  var nin = document.getElementById("nin");
+  var raisonsociale= document.getElementById("raisonsociale");
+  var nomgerant = document.getElementById("nomgerant");
+  var prenomgerant= document.getElementById("prenomgerant");
+
+  if (type.value == "R") {
+    nom.style.display = "block";
+    raisonsociale.style.display = "none";
+    prenom.style.display = "block";
+    nin.style.display = "block";
+    nomgerant.style.display = "none";
+    prenomgerant.style.display = "none";
+
+  } else if (type.value == "C") {
+    nom.style.display ="none" ;
+    raisonsociale.style.display = "block";
+    prenom.style.display = "none";
+    nin.style.display = "none";
+    nomgerant.style.display = "block";
+    prenomgerant.style.display = "block";
+  } else {
+    nom.style.display = "none";
+    raisonsociale.style.display = "none";
+    prenom.style.display = "none";
+    nin.style.display = "none";
+    nomgerant.style.display = "none";
+    prenomgerant.style.display = "none";
+  }
+}
+  </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

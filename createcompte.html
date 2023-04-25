@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container my-4">
+  <h3 class="text-center mb-4">Creer nouveau compte pour</h3>
+  <h4 class="text-center mb-4">{{client.nom}} {{client.prenom}}</h4>
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <form method="post" action="" class="p-4 border rounded">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+        </div>
+        {% endfor %}
+        <input type="submit" value="Ajouter" class="btn btn-primary">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

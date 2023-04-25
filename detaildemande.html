@@ -1,0 +1,464 @@
+{% extends 'main.html' %}
+{%block styles%}
+<style>
+   /* Style pour la colonne de gauche */
+   .left-column {
+      float: left;
+      width: 25%;
+      padding-right: 20px;
+   }
+   /* Style pour la colonne de droite */
+   .right-column {
+      float: left;
+      width: 75%;
+   }
+   /* Style pour les titres des sections */
+   .section-title {
+      cursor: pointer;
+      font-weight: bold;
+   }
+   /* Style pour les champs d'avis */
+   .avis-field {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 20px;
+   }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="left-column" style="background-color:white; border :1px solix white ; border-radius:5px;margin-left:-80px;margin-right:80px;height:500px; padding:10px ">
+       <!-- Section des documents scannés -->
+
+
+<ul>
+
+
+
+
+<h2>Documents dossier:</h2>
+{% for document in documents %}
+    <li><a  href="{% url 'view_file' document.id %}" target="_blank">{{ document.fichier_pdf }}</a></li>
+{% empty %}
+    <li>Aucun document associé à ce dossier.</li>
+{% endfor %}
+</li>  </ul>
+
+
+            {% if role == 'CA' %}
+ <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+       <label for="id_fichier_pdf">Select a file:</label>
+    <input type="file" id="id_fichier_pdf" name="fichier_pdf">
+    <br><br>
+    <input type="submit" name="act" value="ajouter_document">
+</form>
+      {% endif %}
+
+
+    </div>
+    <div class="right-column" style="background-color:white; border :1px solid white ; border-radius:5px;padding:15px">
+ <form >
+<!-- Section des informations clients -->
+<h3 class="section-title" data-target="informations-clients">Informations clients</h3>
+
+<div id="informations-clients" class="section-content">
+    <p><label>CIF :</label> <span id="cif">{{ demande.client.cif }}</span></p>
+  {% if demande.client.typeclient == 'R' %}
+    <p><label>Nom :</label> <span id="nom">{{ demande.client.nom }}</span></p>
+    <p><label>Prénom :</label> <span id="prenom">{{ demande.client.prenom }}</span></p>
+    <p><label>Date de naissance :</label> <span id="date-naissance">{{ demande.client.datenaissance }}</span></p>
+    <p><label>Lieu de naissance :</label> <span id="lieu-naissance">{{ demande.client.lieudenaissance }}</span></p>
+    <p><label>NIN :</label> <span id="nin">{{ demande.client.nin }}</span></p>
+  {% elif demande.client.typeclient == 'C' %}
+    <p><label>Raison sociale :</label> <span id="raison-sociale">{{ demande.client.raisonsociale }}</span></p>
+    <p><label>Nom du gérant :</label> <span id="nom-gerant">{{ demande.client.nomgerant }}</span></p>
+    <p><label>Prénom du gérant :</label> <span id="prenom-gerant">{{ demande.client.prenomgerant }}</span></p>
+
+    <p><label>Date de création :</label> <span id="date-creation">{{ demande.client.datenaissance }}</span></p>
+    <p><label>Lieu de création :</label> <span id="lieu-creation">{{ demande.client.lieudenaissance }}</span></p>
+  {% endif %}
+
+  <p><label>Registre du commerce :</label> <span id="reg-comm">{{ demande.client.regcomm }}</span></p>
+  <p><label>NIF :</label> <span id="nif">{{ demande.client.nif }}</span></p>
+  <p><label>Secteur d'activité :</label> <span id="secteur-activite">{{ demande.client.secteuractivite }}</span></p>
+  <p><label>Adresse :</label> <span id="adresse">{{ demande.client.adresse }}</span></p>
+    <p><label>Numéro :</label> <span id="numero">{{ demande.client.numero }}</span></p>
+
+    </div>
+<h3 class="section-title" data-target="informations-demandes">Information sur la demande</h3>
+
+<div id="informations-demandes" class="section-content">
+
+
+  <p><label>Id demande :</label><span>{{demande.iddc}}</span></p>
+  <p><label>Type demande :</label><span>{{demande.typedem}}</span></p>
+  <p><label>cree par :</label><span>{{demande.creepar.nom}} {{demande.creepar.prenom}}</span></p>
+   <p><label>description :</label><span>{{demande.description}}</span></p>
+
+    </div></form>
+<!-- Section du compte rendu d'agence -->
+      <h3 class="section-title" data-target="Cptrendu">Compte rendu agence</h3>
+
+      <div id="Cptrendu" class="section-content">
+
+  <form method="POST">
+    {% csrf_token %}
+    <h4>Avis chargé d'affaires</h4>
+
+    {% if avisca %}
+      <textarea name="avis_chargé_affaire2" class="avis" readonly>{{ avisca }}</textarea>
+      {% else %}
+    <textarea name="avis_directeur_commercial" class="avis-field" readonly></textarea>
+      {% endif %}
+
+      <h4>Avis directeur adjoint agence</h4>
+      {% if avisdaa  %}
+       <textarea name="avis_directeur_adjoint_agence" class="avis" readonly>{{ avisdaa }}</textarea>
+       {% else %}
+    <textarea name="avis_directeur_commercial" class="avis-field" readonly></textarea>
+      {% endif %}
+
+      <h4>Avis directeur agence</h4>
+      {% if avisda  %}
+          <textarea name="avis_directeur_agence" class="avis" readonly>{{ avisda }}</textarea>
+          {% else %}
+    <textarea name="avis_directeur_commercial" class="avis-field" readonly></textarea>
+    {% endif %}
+
+      </div>
+
+      <h3 class="section-title" data-target="dircom">Direction commercial</h3>
+  <div id="dircom" class="section-content">
+
+
+
+    <h4>Avis Directeur Commercial</h4>
+     {% if avisdc  %}
+          <textarea name="avis_directeur_commercial" class="avis" readonly>{{ avisdc }}</textarea>
+    {% else %}
+    <textarea name="avis_directeur_commercial" class="avis-field" readonly></textarea>
+    {% endif %}
+
+</div>
+
+       <h3 class="section-title" data-target="dircredit">Direction credit</h3>
+
+<div id="dircrédit" class="section-content">
+    <h4>Avis Directeur des crédits</h4>
+     {% if avisdcr%}
+          <textarea name="avis_directeur_credit" class="avis" readonly>{{ avisdcr }}</textarea>
+    {% else %}
+    <textarea name="avis_directeur_credit" class="avis" readonly></textarea>
+    {% endif %}
+
+    <h4>Avis Chef departement review</h4>
+     {% if aviscdr  %}
+          <textarea name="avis_chefdepartement_review" class="avis" readonly>{{ aviscdr }}</textarea>
+    {% else %}
+    <textarea name="avis_chefdepartement_review" class="avis" readonly></textarea>
+    {% endif %}
+
+<h4>Avis Analyste </h4>
+     {% if avisar  %}
+          <textarea name="avis_analyste_review" class="avis" readonly>{{ avisar }}</textarea>
+
+    {% else %}
+    <textarea name="avis_analyste_review" class="avis" readonly></textarea>
+    {% endif %}
+</div>
+
+
+
+
+
+    <h3 class="section-title" data-target="comité"> Comité credit</h3>
+<div id="comité" class="section-content">
+
+    <h4>Avis Directeur</h4>
+     {% if avisdg  %}
+          <textarea name="avis_directeur_general" class="avis" readonly>{{ avisdg }}</textarea>
+    {% else %}
+    <textarea name="avis_directeur_general" class="avis" readonly></textarea>
+    {% endif %}
+    <h4>Avis Directeur General Adjoint</h4>
+     {% if avisdga  %}
+          <textarea name="avis_directeur_adjoint" class="avis" readonly>{{ avisdga }}</textarea>
+    {% else %}
+    <textarea name="avis_directeur_adjoint" class="avis" readonly></textarea>
+    {% endif %}
+
+    </div>
+    {% if role == 'CA' %}
+    {% if demande.statut == '1' %}
+    laissez un commentaire sur la demande
+    <textarea name="avis"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% elif demande.statut == '3' %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% elif demande.statut == '7' %}
+    Message pour l'analyste review :
+    <textarea name="gmail"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Retransmettre le dossier</button>
+    {% elif demande.statut == '15.5' %}
+    {% if comptevalide %}
+    <select name="choixclient" id="choixclient"  required>
+      <option value="">Select an option</option>
+      <option value="R">Refus client</option>
+          <option value="A">Acceptation client</option></select>
+    {% endif %}
+     <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+        {% elif demande.statut == '17' %}
+    <label for="compte">Type de crédit : </label>
+      <select name="compte" id="compte"  required>
+      <option value="">Select an option</option>
+          <option value=""></option></select>
+
+
+         <label for="nom">Montant:</label>
+      <input type="text" name="montant">
+    <label for="nom">Dateecheance:</label>
+      <input type="date" name="date">
+     <label for="nom">Taux d'intérets:</label>
+      <input type="text" name="tx">
+    <label for="compte">Compte : </label>
+      <select name="compte" id="compte"  required>
+      <option value="">Select an option</option>
+      {% for a in comptevalide %}
+          <option value="{{a.numcompte}}">{{a.numcompte}}</option>
+        {% endfor %}
+    </select>
+        {% else %}
+        {% endif %}
+    {% elif role == 'DAA' %}
+        {% if demande.statut == '2' %}
+    <textarea name="avis"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% endif %}
+        {% elif role == 'DA' %}
+        {% if demande.statut == '3' %}
+    <textarea name="avis"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% endif %}
+        {% elif role == 'DC' %}
+        {% if demande.statut == '4' %}
+    <textarea name="avis"  required></textarea>
+    <label><input type="radio" name="decisiondc" value="pour" required> Pour</label>
+<label><input type="radio" name="decisiondc" value="contre" required> Contre</label>
+    <label for="choix">Envoyer au : </label>
+      <select name="choix" id="choix"  required>
+      <option value="">Select an option</option>
+      <option value="P">Comité de Crédit</option>
+          <option value="L">Département review</option></select>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+        {% endif %}
+        {% elif role == 'DCR' %}
+        <label><input type="radio" name="decisiondc" value="pour" required> Pour</label>
+        <label><input type="radio" name="decisiondc" value="contre" required> Contre</label>
+        <textarea name="avis"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+        {% elif role == 'CDR' %}
+            {% if demande.statut == '6' %}
+            <label for="analyste">Dispatch à : </label>
+      <select name="analyste" id="analyste"  required>
+      <option value="">Select an option</option>
+      {% for a in analystes %}
+          <option value="{{a.mat}}">{{a.nom}} {{a.prenom}}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% elif demande.statut == '7' %}
+    <textarea name="avis"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% else %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Retransmettre le dossier à votre analyste</button>
+    {% endif %}
+    {% elif role == 'AR' %}
+        {% if demande.statut == '7' %}
+        <label for="tache">Tache</label>
+      <select name="tache" id="tache" onchange="showFields()" required>
+      <option value="">Select an option</option>
+      <option value="R">Terminer</option>
+          <option value="CD">Manque Document</option>
+
+    </select>
+    <p style="display:none;" id="comm">laissez un commentaire sur la demande de crédit:</p>
+    <p style="display:none;" id="mailca">message au chargé d'affaire :</p>
+    <textarea name="avis" id="avisarr"   required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier" >Transmettre le dossier</button>
+        {% elif demande.statut == '11' %}
+        {% if decision == 'pour' %}
+        {% if credit %}
+        {% else %}
+        <a class="btn btn-primary"  href="{% url 'genererticket' demande.iddc %}" >Générer ticket d'autorisation</a>
+        {% endif %}
+        {% endif %}
+
+
+        <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier" >Transmettre le dossier</button>
+        {% endif %}
+    {% elif role == 'DGA' %}
+        {% if demande.statut == '9' %}
+    <label><input type="radio" name="decisiondga" value="pour" required> Pour</label>
+        <label><input type="radio" name="decisiondga" value="contre" required> Contre</label>
+        <textarea name="avis"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% endif %}
+        {% elif role == 'DG' %}
+        {% if demande.statut == '10' %}
+    <label><input type="radio" name="decisiondg" value="pour" required> Pour</label>
+        <label><input type="radio" name="decisiondg" value="contre" required> Contre</label>
+        <textarea name="avis"  required></textarea>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% endif %}
+        {% elif role == 'SDCR' %}
+        {% if demande.statut == '12' %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% endif %}
+        {% elif role == 'CCN' %}
+        {% if demande.statut == '13' %}
+    <label for="tache">Tache</label>
+    <select name="tache" id="tache" onchange="showFields()" required>
+    <option value="">Select an option</option>
+    <option value="R">Terminer</option>
+        <option value="CD">Manque Document</option>
+
+  </select>
+  <p style="display:none;" id="'comm">laissez un commentaire sur la demande de crédit:</p>
+  <p style="display:none;" id="mailca">message au chargé d'affaire :</p>
+  <textarea name="avis" id="avisarr"   required></textarea>
+  <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+  {% endif %}
+        {% elif role == 'CDAC' %}
+  {% if demande.statut == '14' %}
+
+  <label for="analyste">Dispatch à : </label>
+      <select name="CAC" id="analyste"  required>
+      <option value="">Select an option</option>
+      {% for a in CACs %}
+          <option value="{{a.mat}}">{{a.nom}} {{a.prenom}}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% elif demande.statut == '14.5' %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre la demande au chargé d'affaire</button>
+    {% else %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Valider le Credit</button>
+    {% endif %}
+
+    {% elif role == 'CAC' %}
+    {% if demande.statut == '15' %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre la demande au chargé d'affaire</button>
+    {% else %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre la demande au département juridique</button>
+    {% endif %}
+    {% elif role == 'CAJ' %}
+    <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier">Transmettre le dossier</button>
+    {% elif role == 'CTRL' %}
+    <label for="tache">Tache</label>
+    <select name="tache" id="tache" onchange="showFields2()" required>
+    <option value="">Select an option</option>
+    <option value="R">Terminer</option>
+        <option value="CD">Manque Document</option>
+
+  </select>
+
+  <p style="display:none;" id="mailca">message au chargé d'affaire :</p>
+  <textarea name="avis" id="avisarr"  style="display:none;" ></textarea>
+  <button class="btn btn-primary" type="submit" name="action" value="transmettre_dossier " id="tr" style="display:none;">Transmettre le dossier</button>
+  <button class="btn btn-primary" type="submit" name="action" value="cloture_dossier " id="clot" style="display:none;">Cloturer le dossier</button>
+</form>
+
+</div>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+       {% block scripts %}
+              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+ $(document).ready(function() {
+    // Fonction pour déployer/fermer une section
+    function toggleSection(sectionTitle, sectionContent) {
+       $(sectionTitle).click(function() {
+          $(sectionContent).slideToggle();
+       });
+    }
+
+      $("#informations-demandes ,#informations-clients").hide();
+
+    // Déploiement des sections
+    toggleSection(".section-title:nth-of-type(1)", "#informations-clients");
+    toggleSection(".section-title:nth-of-type(2)", "#informations-demandes");
+    toggleSection(".section-title:nth-of-type(3)", "#Cptrendu");
+    toggleSection(".section-title:nth-of-type(4)", "#dircom");
+    toggleSection(".section-title:nth-of-type(5)", "#dircrédit");
+    toggleSection(".section-title:nth-of-type(6)", "#comité");
+
+ });
+
+ // Désactiver le redimensionnement des zones de texte
+var textareas = document.getElementsByTagName('textarea');
+for (var i = 0; i < textareas.length; i++) {
+  textareas[i].style.resize = 'none';
+  textareas[i].style.width='500px';
+  textareas[i].style.width='700px';
+  textareas[i].style.height='100px';
+}
+</script>
+<script>
+    function showFields() {
+      var mail = document.getElementById("mailca");
+      var com = document.getElementById("comm");
+      var tache = document.getElementById("tache");
+
+      if (tache.value == "CD") {
+        mail.style.display = "block";
+        com.style.display = "none";}
+        else if (tache.value == 'R'){
+            mail.style.display = "none";
+        com.style.display = "block";
+        }
+        else {
+        com.style.display = "none";
+        mail.style.display = "none";
+      }
+    }
+      </script>
+      <script>
+        function showFields2() {
+          var mail = document.getElementById("mailca");
+          var avisarr = document.getElementById("avisarr");
+          var clot = document.getElementById("clot");
+          var tr = document.getElementById("tr");
+          var tache = document.getElementById("tache");
+
+          if (tache.value == "CD") {
+            mail.style.display = "block";
+            avisarr.style.display = "block";
+            tr.style.display = "block";
+            clot.style.display = "none";}
+            else if (tache.value == 'R'){
+                mail.style.display = "none";
+            avisarr.style.display = "none";
+            tr.style.display = "none";
+            clot.style.display = "block";
+            }
+            else {
+            com.style.display = "none";
+            mail.style.display = "none";
+            tr.style.display = "none";
+            clot.style.display = "none";
+          }
+        }
+          </script>
+      {% endblock %}
